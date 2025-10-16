@@ -1,0 +1,13 @@
+{
+  "name" : "Uboy.Perf-Lagless GUI",
+  "id" : "uboy.perf.laglessgui",
+  "version" : "1.0.0",
+  "supported_game_version" : "1.10.*",
+  "picture": "thumbnail.png",
+  "short_description" : "Remove some UI elements to improve performance.",
+  "tags" : ["Utilities", "UI"],
+  "relationships" : [],
+  "game_custom_data" : {
+    "multiplayer_synchronized" : true
+  }
+}
