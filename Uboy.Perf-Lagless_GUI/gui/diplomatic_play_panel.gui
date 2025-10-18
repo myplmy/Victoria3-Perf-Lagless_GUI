@@ -86,105 +86,6 @@ template diplo_play_phases_scale {
 	scale = 0.6
 }
 
-### UBOY.PERF.LAGLESS_GUI 
-### OPTIMIZATION: SIMPLIFIED VISIBILITY TEMPLATES
-### Phase and Role Condition Templates to reduce complexity and improve performance
-
-### PHASE DEFINITION TEMPLATES
-template visibility_not_in_maneuver_phase {
-	visible = "[Or(
-		LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')), 
-		GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))
-	)]"
-}
-
-template visibility_in_maneuver_phase {
-	visible = "[And(
-		GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')),
-		LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))
-	)]"
-}
-
-### PLAYER ROLE TEMPLATES
-template visibility_is_initiator_or_target {
-	visible = "[DiplomaticPlay.IsTargetOrInitiator(GetPlayer)]"
-}
-
-template visibility_not_initiator_or_target {
-	visible = "[Not(DiplomaticPlay.IsTargetOrInitiator(GetPlayer))]"
-}
-
-template visibility_not_undecided_or_backer {
-	visible = "[Not(Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer)))]"
-}
-
-template visibility_is_undecided_or_backer {
-	visible = "[Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer))]"
-}
-
-template visibility_is_uninvolved_or_fence {
-	visible = "[Or(
-		Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer)), 
-		Not(DiplomaticPlay.IsInvolved(GetPlayer))
-	)]"
-}
-
-### INSTRUCTION STATE TEMPLATES
-template visibility_instruction_cannot_sway_init_target {
-	visible = "[And(
-		Or(
-			LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')), 
-			GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))
-		), 
-		DiplomaticPlay.IsTargetOrInitiator(GetPlayer)
-	)]"
-}
-
-template visibility_instruction_cannot_sway_involved {
-	visible = "[And(
-		Or(
-			LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')), 
-			GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))
-		), 
-		And(
-			Not(Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer))), 
-			Not(DiplomaticPlay.IsTargetOrInitiator(GetPlayer))
-		)
-	)]"
-}
-
-template visibility_instruction_can_sway {
-	visible = "[And(
-		And(
-			GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')),
-			LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))
-		), 
-		And(
-			DiplomaticPlay.IsTargetOrInitiator(GetPlayer), 
-			Not(Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer)))
-		)
-	)]"
-}
-
-### ACTION BUTTON TEMPLATES
-template visibility_can_switch_side {
-	visible = "[IsValid( DiplomaticPlay.SwitchSide( GetPlayer ))]"
-}
-
-template visibility_is_initiator_cannot_switch {
-	visible = "[And( DiplomaticPlay.IsInitiator(GetPlayer), Not( IsValid( DiplomaticPlay.SwitchSide( GetPlayer ))))]"
-}
-
-template visibility_is_target_cannot_switch {
-	visible = "[And( DiplomaticPlay.IsTarget(GetPlayer), Not( IsValid( DiplomaticPlay.SwitchSide( GetPlayer ))))]"
-}
-
-template visibility_is_neutral_party {
-	visible = "[And( Not( DiplomaticPlay.IsInitiator(GetPlayer) ), Not( DiplomaticPlay.IsTarget(GetPlayer) ))]"
-}
-
-### Uboy.Perf.Lagless_GUI END
-
 types diplomatic_play_panel_types
 {
 	### DIPLOMATIC PLAYS
@@ -361,28 +262,22 @@ types diplomatic_play_panel_types
 				background = {
 					fittype = start
 					texture = "gfx/interface/illustrations/diplomatic_plays/phase_opening_moves_big.dds"
-					using = visibility_opening_moves
-                    ### Uboy.Perf.Lagless_GUI MODIFIED
-					#using = phase_image_swap
-                    ### Uboy.Perf.Lagless_GUI MODIFIED END
+					using = visibility_opening_moves	
+					using = phase_image_swap
 					alpha = 0.5
 				}
 				background = {
 					fittype = start
 					texture = "gfx/interface/illustrations/diplomatic_plays/phase_diplomatic_maneuvers_big.dds"
 					using = visibility_diplomatic_maneuvers
-                    ### Uboy.Perf.Lagless_GUI MODIFIED
-					#using = phase_image_swap
-                    ### Uboy.Perf.Lagless_GUI MODIFIED END
+					using = phase_image_swap
 					alpha = 0.5
 				}
 				background = {
 					fittype = start
 					texture = "gfx/interface/illustrations/diplomatic_plays/phase_countdown_to_war_big.dds"
 					using = visibility_countdown_to_war
-                    ### Uboy.Perf.Lagless_GUI MODIFIED
-					#using = phase_image_swap
-                    ### Uboy.Perf.Lagless_GUI MODIFIED END
+					using = phase_image_swap
 					alpha = 0.5
 				}
 				
@@ -578,9 +473,7 @@ types diplomatic_play_panel_types
 							size = { 200 200 }
 							parentanchor = center
 							using = visibility_opening_moves
-                            ### Uboy.Perf.Lagless_GUI MODIFIED
-							#using = phase_image_small_swap
-                            ### Uboy.Perf.Lagless_GUI MODIFIED END
+							using = phase_image_small_swap
 							using = diplo_play_phases_scale
 						}
 						icon = {
@@ -588,9 +481,7 @@ types diplomatic_play_panel_types
 							size = { 200 200 }
 							parentanchor = center
 							using = visibility_diplomatic_maneuvers
-                            ### Uboy.Perf.Lagless_GUI MODIFIED
-							#using = phase_image_small_swap
-                            ### Uboy.Perf.Lagless_GUI MODIFIED END
+							using = phase_image_small_swap
 							using = diplo_play_phases_scale
 						}
 						icon = {
@@ -598,9 +489,7 @@ types diplomatic_play_panel_types
 							size = { 200 200 }
 							parentanchor = center
 							using = visibility_countdown_to_war
-                            ### Uboy.Perf.Lagless_GUI MODIFIED
-							#using = phase_image_small_swap
-                            ### Uboy.Perf.Lagless_GUI MODIFIED END
+							using = phase_image_small_swap
 							using = diplo_play_phases_scale
 						}
 						
@@ -648,9 +537,7 @@ types diplomatic_play_panel_types
 								icon = {
 									texture = "gfx/interface/diplomatic_plays/escalation_glow_opening_moves.dds"
 									size = { 160 130 }
-                                    ### Uboy.Perf.Lagless_GUI MODIFIED
-									#using = phase_glow
-                                    ### Uboy.Perf.Lagless GUI MODIFIED END
+									using = phase_glow
 									using = diplo_play_phases_scale
 								}
 							}
@@ -674,9 +561,7 @@ types diplomatic_play_panel_types
 								icon = {
 									texture = "gfx/interface/diplomatic_plays/escalation_glow_diplomatic_maneuvers.dds"
 									size = { 300 193 }
-                                    ### Uboy.Perf.Lagless_GUI MODIFIED
-									#using = phase_glow
-                                    ### Uboy.Perf.Lagless_GUI MODIFIED END
+									using = phase_glow
 									using = diplo_play_phases_scale
 								}
 							}
@@ -700,9 +585,7 @@ types diplomatic_play_panel_types
 								icon = {
 									texture = "gfx/interface/diplomatic_plays/escalation_glow_countdown_to_war.dds"
 									size = { 160 130 }
-                                    ### Uboy.Perf.Lagless_GUI MODIFIED
-									#using = phase_glow
-                                    ### Uboy.Perf.Lagless_GUI MODIFIED END
+									using = phase_glow
 									using = diplo_play_phases_scale
 								}
 							}
@@ -913,28 +796,22 @@ types diplomatic_play_panel_types
 				background = {
 					fittype = start
 					texture = "gfx/interface/illustrations/diplomatic_plays/phase_opening_moves_big.dds"
-					using = visibility_opening_moves
-                    ### Uboy.Perf.Lagless_GUI MODIFIED
-					#using = phase_image_swap
-                    ### Uboy.Perf.Lagless_GUI MODIFIED END
+					using = visibility_opening_moves	
+					using = phase_image_swap
 					alpha = 0.5
 				}
 				background = {
 					fittype = start
 					texture = "gfx/interface/illustrations/diplomatic_plays/phase_diplomatic_maneuvers_big.dds"
 					using = visibility_diplomatic_maneuvers
-                    ### Uboy.Perf.Lagless_GUI MODIFIED
-					#using = phase_image_swap
-                    ### Uboy.Perf.Lagless_GUI MODIFIED END
+					using = phase_image_swap
 					alpha = 0.5
 				}
 				background = {
 					fittype = start
 					texture = "gfx/interface/illustrations/diplomatic_plays/phase_countdown_to_war_big.dds"
 					using = visibility_countdown_to_war
-                    ### Uboy.Perf.Lagless_GUI MODIFIED
-					#using = phase_image_swap
-                    ### Uboy.Perf.Lagless_GUI MODIFIED END
+					using = phase_image_swap
 					alpha = 0.5
 				}
 				
@@ -950,12 +827,8 @@ types diplomatic_play_panel_types
 					}
 					
 					### INSTRUCTION (CANNOT SWAY AND INITIATOR OR TARGET)
-					### Uboy.Perf.Lagless_GUI OPTIMIZATION: Using template for condition reduction
 					textbox = {
-						###Uboy.Perf.Lagless_GUI MODIFIED 
-						#visible = "[And(Or(LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')), GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))), DiplomaticPlay.IsTargetOrInitiator(GetPlayer))]"
-						using = visibility_instruction_cannot_sway_init_target
-						###Uboy.Perf.Lagless_GUI MODIFIED END
+						visible = "[And(Or(LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')), GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))), DiplomaticPlay.IsTargetOrInitiator(GetPlayer))]"
 						position = { 0 10 }
 						parentanchor = center
 						autoresize = yes
@@ -969,12 +842,8 @@ types diplomatic_play_panel_types
 					}
 
 					### INSTRUCTION (CANNOT SWAY AND INVOLVED)
-					### Uboy.Perf.Lagless_GUI OPTIMIZATION: Using template for condition reduction
 					textbox = {
-						###Uboy.Perf.Lagless_GUI MODIFIED
-						#visible = "[And(Or(LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')), GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))), And(Not(Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer))), Not(DiplomaticPlay.IsTargetOrInitiator(GetPlayer))))]"
-						using = visibility_instruction_cannot_sway_involved
-						###Uboy.Perf.Lagless_GUI MODIFIED END
+						visible = "[And(Or(LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')), GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))), And(Not(Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer))), Not(DiplomaticPlay.IsTargetOrInitiator(GetPlayer))))]"
 						position = { 0 10 }
 						parentanchor = center
 						autoresize = yes
@@ -988,12 +857,8 @@ types diplomatic_play_panel_types
 					}
 
 					### INSTRUCTION (INITIATOR OR TARGET CAN SWAY)
-					### Uboy.Perf.Lagless_GUI OPTIMIZATION: Using template for condition reduction
 					textbox = {
-						###Uboy.Perf.Lagless_GUI MODIFIED
-						#visible = "[And(And(GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')),LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))), And(DiplomaticPlay.IsTargetOrInitiator(GetPlayer), Not(Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer)))))]"
-						using = visibility_instruction_can_sway
-						###Uboy.Perf.Lagless_GUI MODIFIED END
+						visible = "[And(And(GreaterThanOrEqualTo_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_OPENING_PHASE_END')),LessThan_int32(DiplomaticPlay.GetEscalation, GetDefine('NDiplomacy', 'DIPLOMATIC_PLAY_CLOSING_PHASE_START'))), And(DiplomaticPlay.IsTargetOrInitiator(GetPlayer), Not(Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer)))))]"
 						position = { 0 10 }
 						parentanchor = center
 						autoresize = yes
@@ -1007,12 +872,8 @@ types diplomatic_play_panel_types
 					}
 					
 					### INSTRUCTION (INVOLVED COUNTRIES)
-					### Uboy.Perf.Lagless_GUI OPTIMIZATION: Using template for condition reduction
 					textbox = {
-						###Uboy.Perf.Lagless_GUI MODIFIED
-						#visible = "[Or(Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer)), Not(DiplomaticPlay.IsInvolved(GetPlayer)))]"
-						using = visibility_is_uninvolved_or_fence
-						###Uboy.Perf.Lagless_GUI MODIFIED END
+						visible = "[Or(Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer),DiplomaticPlay.IsBacker(GetPlayer)), Not(DiplomaticPlay.IsInvolved(GetPlayer)))]"
 						position = { 0 10 }
 						parentanchor = center
 						autoresize = yes
@@ -1095,11 +956,11 @@ types diplomatic_play_panel_types
 							onclick = "[InformationPanelBar.OpenSwayCountryPanel( DiplomaticPlay.Self, DiplomaticPlay.GetInitiator )]"
 							tooltip = "[DiplomaticPlay.GetCanSwayCountryDesc(GetPlayer.Self, DiplomaticPlay.GetInitiator)]"
 						}					
-						
+						### Uboy.Perf-Lagless_GUI ▼ FOUND
 						blockoverride "show_reverse_sway_button" {
 							visible = "[And(Or(DiplomaticPlay.IsUndecidedParticipant(GetPlayer), DiplomaticPlay.IsBacker(GetPlayer)), Not(DiplomaticPlay.IsInitiatorBacker(GetPlayer)))]"
 						}	
-						
+						### Uboy.Perf-Lagless_GUI ▲ FOUND
 						blockoverride "show_reverse_sway_approval" {
 							visible = "[DiplomaticPlay.WouldAcceptAnySway( GetPlayer.Self, DiplomaticPlay.GetInitiator )]"
 						}							
@@ -1186,13 +1047,9 @@ types diplomatic_play_panel_types
 					parentanchor = hcenter
 					spacing = 3
 					
-					### Uboy.Perf.Lagless_GUI OPTIMIZATION: Using template for action button conditions
 					button = {
 						using = default_button_action
-						###Uboy.Perf.Lagless_GUI MODIFIED
-						#visible = "[And( DiplomaticPlay.IsInitiator(GetPlayer), Not( IsValid( DiplomaticPlay.SwitchSide( GetPlayer ))))]"
-						using = visibility_is_initiator_cannot_switch
-						###Uboy.Perf.Lagless_GUI MODIFIED END
+						visible = "[And( DiplomaticPlay.IsInitiator(GetPlayer), Not( IsValid( DiplomaticPlay.SwitchSide( GetPlayer ))))]"
 						size = { @panel_width 50 }
 						text = "DIPLO_PLAY_BACK_DOWN"
 						using = fontsize_large
@@ -1200,14 +1057,9 @@ types diplomatic_play_panel_types
 						tooltip = "YIELD_DIPLOMATIC_PLAY_TOOLTIP"
 						onclick = "[PopupManager.AskConfirmation(DiplomaticPlay.Yield(GetPlayer))]"
 					}
-					
-					### Uboy.Perf.Lagless_GUI OPTIMIZATION: Using template for action button conditions
 					button = {
 						using = default_button_action
-						###Uboy.Perf.Lagless_GUI MODIFIED
-						#visible = "[And( DiplomaticPlay.IsTarget(GetPlayer), Not( IsValid( DiplomaticPlay.SwitchSide( GetPlayer ))))]"
-						using = visibility_is_target_cannot_switch
-						###Uboy.Perf.Lagless_GUI MODIFIED END
+						visible = "[And( DiplomaticPlay.IsTarget(GetPlayer), Not( IsValid( DiplomaticPlay.SwitchSide( GetPlayer ))))]"
 						size = { @panel_width 50 }
 						text = "DIPLO_PLAY_GIVE_IN"
 						using = fontsize_large
@@ -1215,14 +1067,9 @@ types diplomatic_play_panel_types
 						tooltip = "YIELD_DIPLOMATIC_PLAY_TOOLTIP"
 						onclick = "[PopupManager.AskConfirmation(DiplomaticPlay.Yield(GetPlayer))]"
 					}
-					
-					### Uboy.Perf.Lagless_GUI OPTIMIZATION: Using template for action button conditions
 					button = {
 						using = default_button_action
-						###Uboy.Perf.Lagless_GUI MODIFIED
-						#visible = "[IsValid( DiplomaticPlay.SwitchSide( GetPlayer ))]"
-						using = visibility_can_switch_side
-						###Uboy.Perf.Lagless_GUI MODIFIED END
+						visible = "[IsValid( DiplomaticPlay.SwitchSide( GetPlayer ))]"
 						size = { @panel_width 50 }
 						text = "DIPLOMATIC_PLAY_SWITCH_COUNTRY"
 						using = fontsize_large
@@ -1230,14 +1077,9 @@ types diplomatic_play_panel_types
 						tooltip = "DIPLOMATIC_PLAY_SWITCH_COUNTRY_TOOLTIP"
 						onclick = "[Execute( DiplomaticPlay.SwitchSide( GetPlayer ))]"
 					}
-					
-					### Uboy.Perf.Lagless_GUI OPTIMIZATION: Using template for action button conditions
 					button = {
 						using = default_button_action
-						###Uboy.Perf.Lagless_GUI MODIFIED
-						#visible = "[And( Not( DiplomaticPlay.IsInitiator(GetPlayer) ), Not( DiplomaticPlay.IsTarget(GetPlayer) ))]"
-						using = visibility_is_neutral_party
-						###Uboy.Perf.Lagless_GUI MODIFIED END
+						visible = "[And( Not( DiplomaticPlay.IsInitiator(GetPlayer) ), Not( DiplomaticPlay.IsTarget(GetPlayer) ))]"
 						size = { @panel_width 50 }
 						text = "DIPLO_PLAY_DECLARE_NEUTRALITY"
 						using = fontsize_large
@@ -1334,9 +1176,7 @@ types custom_popup_types
 						visible = "[DiplomaticPlay.IsInitiator(GetPlayer.Self)]"
 					}
 					parentanchor = center
-                    #### Uboy.Perf.Lagless_GUI MODIFIED
-					#using = rotate_glow_animation_02
-                    #### Uboy.Perf.Lagless_GUI MODIFIED END
+					using = rotate_glow_animation_02
 					size = { 220 220 }
 				}
 				large_flag = {
@@ -1443,9 +1283,7 @@ types custom_popup_types
 					icon = {
 						visible = "[ObjectsEqual(GetMetaPlayer.GetPlayedOrObservedCountry.Self, Country.Self)]"
 						parentanchor = center
-                        ### Uboy.Perf.Lagless_GUI MODIFIED
-						#using = rotate_glow_animation_02
-                        ### Uboy.Perf.Lagless_GUI MODIFIED END
+						using = rotate_glow_animation_02
 						size = { 65 65 }
 					}
 					tiny_flag = {
@@ -1745,9 +1583,7 @@ types custom_popup_types
 					icon = {
 						visible = "[ObjectsEqual(GetMetaPlayer.GetPlayedOrObservedCountry.Self, Country.Self)]"
 						parentanchor = center
-                        ### Uboy.Perf.Lagless_GUI MODIFIED
-						#using = rotate_glow_animation_02
-                        ### Uboy.Perf.Lagless_GUI MODIFIED END
+						using = rotate_glow_animation_02
 						size = { 65 65 }
 					}
 					tiny_flag = {
@@ -2599,7 +2435,7 @@ types custom_popup_types
 						mobilization_icon_flag = {}
 						parentanchor = hcenter
 						position = { 0 7 }
-                        scale = 1.3 # for layout purposes in this specific screen, tiny_flag was slightly to small and small_flag slightly too big
+						scale = 1.3 # for layout purposes in this specific screen, tiny_flag was slightly to small and small_flag slightly too big
 					}
 
 					flowcontainer = {
